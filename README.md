@@ -46,7 +46,7 @@ CREATE TABLE 表名(
 	...
 	字段n 字段n类型 [COMMENT 字段n注释]
 )[ COMMENT 表注释 ];
-``` 
+```
 所有的要用英文的格式
 **最后一个字段后面没有逗号**
 
@@ -1225,7 +1225,7 @@ select count(distinct substring(email, 1, 5)) / count(*) from tb_user;
 ```
 前缀索引中是有可能碰到相同的索引的情况的（因为选择性可能不为1），所以使用前缀索引进行查询的时候，mysql 会有一个回表查询的过程，确定是否为所需数据。如图中的查询到lvbu6之后还要进行回表，回表完再查xiaoy，看到xiaoy是不需要的数据，则停止查下一个。
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/pre.png "索引流程")
+![images](./images/pre.png "索引流程")
 
 
 
@@ -1244,7 +1244,7 @@ phone 和 name 都建立了索引情况下，这句只会用到phone索引字段
 
 联合索引的数据组织图：
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/uion.png)
+![images](./images/uion.png)
 
 ##### 注意事项
 
@@ -1289,7 +1289,7 @@ load data local infile '/root/sql1.log' into table 'tb_user' fields terminated b
 
 主键的顺序的插入过程如下：  
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/keySort.png)
+![images](./images/keySort.png)
 
 但是如果主键是乱序插入的话，就会导致需要插入的位置为中间的位置，会有页分裂的过程。
 
@@ -1463,11 +1463,11 @@ NOTE：如果没有开检查选项就不会进行检查。不同版本是不同�
 ### 创建
 
 	CREATE PROCEDURE 存储过程名称( [参数列表] ) 
-
+	
 	BEGIN
-
+	
 		 SQL 语句 
-
+	
 	END;
 
 
@@ -1531,42 +1531,42 @@ NOTE：要先声明普通变量，再申请游标。
 `根据传入的参数uage，来查询用户表tb_user中，所有的用户年龄小于等于uage的用户姓名（name）和专业（profession），并将用户的姓名和专业插入到所创建的一张新表（id，name，profession）中。`
 
 	create procedure p1l(in uage int)
-
+	
 		begin
-
+	
 			declare uname varchar(100); 
-
+	
 			decLare upro varchar(100);
-
+	
 			declare u_cursor cursor for select name,profession from tb_user where age <= uage; 
-
+	
 			当 条件处理程序的处理的状态码为02000的时候，就会退出。
 			declare exit handler for SQLSTATE '02000'close u_cursor;
-
+	
 			drop table if exists tb_user_pro; 
-
+	
 			create table if not exists tb_user_pro(
-
+	
 			id int primary key auto_increment, 
-
+	
 			name varchar(100), 
-
+	
 			profession varchar(100)
-
+	
 			);
-
+	
 			open u_cursor; 
-
+	
 			while true do 
-
+	
 			fetch u_cursor into uname,Upro; 
-
+	
 			insert into tb_user_pro values(null,uname,Upro); 
-
+	
 			end while;
-
+	
 			close u_cursor; 
-
+	
 		end;
 ## 触发器
 介绍  
@@ -1671,20 +1671,20 @@ InnoDB实现了以下两种类型的行锁：
 
 ### 架构
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic.png )
+![images](./images/artic.png )
 
 Buffer Pool：缓冲池是主内存中的一个区域，里面可以缓存磁盘上经常操作的真实数据，在执行增删改查操作时，先操作缓冲池中的数据（若缓冲池没有数据，则从磁盘加载并缓存），然后再以一定频率刷新到磁盘，从而减少磁盘I0，加快处理速度。
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic2.png )
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic3.png )
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic4.png )
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic5.png )
+![images](./images/artic2.png )
+![images](./images/artic3.png )
+![images](./images/artic4.png )
+![images](./images/artic5.png )
 
 
 磁盘架构：
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic6.png )
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic7.png )
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic8.png )
+![images](./images/artic6.png )
+![images](./images/artic7.png )
+![images](./images/artic8.png )
 
 InnoDB的整个体系结构为：
 
@@ -1732,7 +1732,7 @@ undo log和redo log记录物理日志不一样，它是逻辑日志。可以认�
 
 有三个隐藏的字段:
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/MVCC.png )
+![images](./images/MVCC.png )
 
 > undo log回滚日志，在insert、update、delete的时候产生的便于数据回滚的日志。
 > 当insert的时候，产生的undo log日志只在回滚时需要，在事务提交后，可被立即删除。
@@ -1742,11 +1742,11 @@ undo log 版本链：
 
 undo log日志会记录原来的版本的数据，因为是通过undo log 日志进行回滚的。
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/MVCCList.png )
+![images](./images/MVCCList.png )
 
 如何确定返回哪一个版本 这是由read view决定返回 undo log 中的哪一个版本。
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/readview0.png )
+![images](./images/readview0.png )
 
 > RC隔离级别下，在事务中每一次执行快照读时生成ReadView。  
 > RR隔离级别下，在事务中第一次执行快照读时生成ReadView，后续会复用。  
@@ -1760,7 +1760,7 @@ MVCC 靠 隐藏字段 , undo log 版本链 , read view 实现的。
 * 一致性-undo log + redo log
 * 隔离性-锁 + MVCC
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/readview.png )
+![images](./images/readview.png )
 
 # 数据类型
 
